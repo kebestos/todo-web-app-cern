@@ -25,7 +25,7 @@ public class TaskService {
     }
 
     public Task createTask(Task task, String userName) {
-        try{
+        try {
             CustomUser user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             user.getTasks().add(task);
@@ -33,7 +33,7 @@ public class TaskService {
             userRepository.save(user);
 
             return taskRepository.save(task);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -41,17 +41,16 @@ public class TaskService {
     //TODO is task existing check ?
     public Task updateTask(Long taskId, Task taskUpdate, String userName) {
         //only user of the task or ADMIN
-        try{
+        try {
             CustomUser user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            if(isAdmin(user) || isTaskBelongToUser(taskId, user)){
+            if (isAdmin(user) || isTaskBelongToUser(taskId, user)) {
                 Task taskUpdated = new Task(taskId, taskUpdate.getName(), taskUpdate.getDescription(), taskUpdate.getDeadline(), taskUpdate.getCategory());
                 return taskRepository.save(taskUpdated);
-            }
-            else {
+            } else {
                 throw new RuntimeException("Unauthorized access");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             //TODO add error code
             throw new RuntimeException(e.getMessage());
         }
@@ -60,21 +59,21 @@ public class TaskService {
     /**
      * TODO separate Exception
      * TODO user can have a list of task
+     *
      * @param taskId
      * @param userName
      * @return
      */
     public Task getTaskById(Long taskId, String userName) {
-        try{
+        try {
             CustomUser user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            if(isAdmin(user) || isTaskBelongToUser(taskId, user)){
+            if (isAdmin(user) || isTaskBelongToUser(taskId, user)) {
                 return taskRepository.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
-            }
-            else {
+            } else {
                 throw new RuntimeException("Unauthorized access");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             //TODO add error code
             throw new RuntimeException(e.getMessage());
         }
@@ -82,13 +81,15 @@ public class TaskService {
 
     //TODO verify task exist  ?
     public void deleteTask(Long taskId, String userName) {
-        try{
+        try {
             CustomUser user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            if(isAdmin(user) || isTaskBelongToUser(taskId, user)){
+            if (isAdmin(user) || isTaskBelongToUser(taskId, user)) {
                 taskRepository.deleteById(taskId);
+            } else {
+                throw new RuntimeException("Unauthorized access");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             //TODO add error code
             throw new RuntimeException(e.getMessage());
         }
@@ -96,16 +97,27 @@ public class TaskService {
 
     public List<Task> getTasksByQuery(TaskQuery taskQuery, String userName) {
 
-        //get list of taskId of the user
+        try {
+            CustomUser user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return taskRepository.findAll(
-                TaskSpecifications.buildTaskQuery(
-                        taskQuery.name(),
-                        taskQuery.description(),
-                        taskQuery.deadline(),
-                        taskQuery.categoryId()
-                )
-        );
+            if (isAdmin(user) || taskQuery.userId().equals(user.getId())) {
+
+                return taskRepository.findAll(
+                        TaskSpecifications.buildTaskQuery(
+                                taskQuery.name(),
+                                taskQuery.description(),
+                                taskQuery.deadline(),
+                                taskQuery.categoryId(),
+                                taskQuery.userId()
+                        )
+                );
+            } else {
+                throw new RuntimeException("Unauthorized access");
+            }
+        } catch (Exception e) {
+            //TODO add error code
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     private static boolean isTaskBelongToUser(Long taskId, CustomUser user) {
