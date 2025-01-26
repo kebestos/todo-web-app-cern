@@ -16,13 +16,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    //TODO fix get roles
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .map(user -> User
                         .withUsername(user.getUsername())
                         .password(user.getPassword())
-                        .roles(user.getRole())
+                        .roles("ADMIN")
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }

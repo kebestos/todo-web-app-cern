@@ -2,13 +2,16 @@ package ch.cern.todo.infrastructure.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class CustomUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -17,19 +20,23 @@ public class CustomUser {
     @Column(nullable = false)
     private String password;
 
-    @Column
-    private String role;
 
-    @Column
-    private Long taskId;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
 
-    public CustomUser(Long id, String username, String password, String role, Long taskId) {
+    public CustomUser(Long id, String username, String password, Set<Role> roles, List<Task> tasks) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.role = role;
-        this.taskId = taskId;
+        this.roles = roles;
+        this.tasks = tasks;
     }
 
     public CustomUser() {
@@ -47,12 +54,12 @@ public class CustomUser {
         return password;
     }
 
-    public String getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public Long getTaskId() {
-        return taskId;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
     @Override
@@ -60,11 +67,11 @@ public class CustomUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomUser that = (CustomUser) o;
-        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(role, that.role) && Objects.equals(taskId, that.taskId);
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(roles, that.roles) && Objects.equals(tasks, that.tasks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, role, taskId);
+        return Objects.hash(id, username, password, roles, tasks);
     }
 }

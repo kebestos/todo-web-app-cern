@@ -24,7 +24,9 @@ public class TaskController {
     public ResponseEntity<Task> createTask(@RequestBody Task task, Principal principal) {
         try {
             String userName = principal.getName();
-            Task taskCreated = taskService.createTask(task);
+
+            Task taskCreated = taskService.createTask(task, userName);
+
             return ResponseEntity.ok(taskCreated);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -35,25 +37,36 @@ public class TaskController {
     public ResponseEntity<Task> getTaskById(@PathVariable Long taskId, Principal principal) {
         try {
             String userName = principal.getName();
-            return ResponseEntity.ok(taskService.getTaskById(taskId));
+
+            Task task = taskService.getTaskById(taskId, userName);
+
+            return ResponseEntity.ok(task);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task, Principal principal) {
         try {
-            return ResponseEntity.ok(taskService.updateTask(taskId, task));
+            String userName = principal.getName();
+
+            Task taskUpdated = taskService.updateTask(taskId, task, userName);
+
+            return ResponseEntity.ok(taskUpdated);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId, Principal principal) {
         try {
-            taskService.deleteTask(taskId);
+            String userName = principal.getName();
+
+            taskService.deleteTask(taskId, userName);
+
+            //TODO return content ?
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -61,9 +74,13 @@ public class TaskController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Task>> getTasksByQuery(@RequestBody TaskQuery taskQuery) {
+    public ResponseEntity<List<Task>> getTasksByQuery(@RequestBody TaskQuery taskQuery, Principal principal) {
         try {
-            return ResponseEntity.ok(taskService.getTasksByQuery(taskQuery));
+            String userName = principal.getName();
+
+            List<Task> tasks = taskService.getTasksByQuery(taskQuery, userName);
+
+            return ResponseEntity.ok(tasks);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

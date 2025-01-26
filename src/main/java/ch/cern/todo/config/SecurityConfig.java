@@ -1,45 +1,33 @@
 package ch.cern.todo.config;
 
+import ch.cern.todo.infrastructure.entity.CustomUser;
+import ch.cern.todo.infrastructure.entity.Role;
+import ch.cern.todo.infrastructure.repository.RoleRepository;
+import ch.cern.todo.infrastructure.repository.UserRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfig {
 
-//    private final UserDetailsServiceImpl userDetailsServices;
-//
-//    public SecurityConfig(UserDetailsServiceImpl userDetailsServices) {
-//        this.userDetailsServices = userDetailsServices;
-//    }
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests((authorize) -> authorize
-//                        .requestMatchers(HttpMethod.GET,"/").permitAll()
-//                        .requestMatchers("/h2-console/**").permitAll()
-//                        .requestMatchers("/api/task/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .formLogin(Customizer.withDefaults());
-//
-//        return http.build();
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated()
@@ -60,59 +48,22 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    //    @Bean
-//    UserDetailsService userDetailsService() {
-//        return userDetailsServices;
-////        UserDetails user = User
-////                .withUsername("user")
-////                .password("{noop}password")
-////                .roles("USER")
-////                .build();
-////
-////        UserDetails admin = User
-////                .withUsername("admin")
-////                .password("{noop}admin")
-////                .roles("ADMIN")
-////                .build();
-////        return new InMemoryUserDetailsManager(user, admin);
-//    }
+    @Bean
+    public CommandLineRunner init(RoleRepository roleRepository, UserRepository userRepository) {
+        System.out.println("DATA initialized");
+        return args -> {
+            Role roleAdmin = new Role(null,"ADMIN");
+            Role roleUser = new Role(null,"USER");
 
-//    @Bean
-//    public AuthenticationProvider authenticationProvider(){
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//        provider.setUserDetailsService(userDetailsService());
-//        provider.setPasswordEncoder(passwordEncoder());
-//        return provider;
-//
-//    }
+            Set<Role> roles_admin = new HashSet<>();
+            roles_admin.add(roleAdmin);
+            Set<Role> roles_user = new HashSet<>();
+            roles_user.add(roleUser);
 
-//    @Bean
-//    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-//        return http
-//                .authenticationManager(authManagerBuilder ->
-//                        authManagerBuilder
-//                                .userDetailsService(userDetailsService)
-//                                .passwordEncoder(passwordEncoder())
-//                )
-//                .getSharedObject(AuthenticationManager.class);
-//    }
-
-
-//    @Bean
-//    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-//        return http
-//                .authenticationManager(authManagerBuilder ->
-//                        authManagerBuilder
-//                                .userDetailsService(userDetailsService())
-//                                .passwordEncoder(passwordEncoder())
-//                )
-//                .getSharedObject(AuthenticationManager.class);
-//    }
-
-//    @Bean
-//    public CommandLineRunner init(UserRepository userRepository) {
-//        return args -> {
-//            userRepository.save(new CustomUser(1L, "admin", "admin","ROLE_ADMIN", 1L));
-//        };
-//    }
+            roleRepository.save(roleAdmin);
+            roleRepository.save(roleUser);
+            userRepository.save(new CustomUser(null,"admin", "admin", roles_admin,null));
+            userRepository.save(new CustomUser(null,"user", "user", roles_user,null));
+        };
+    }
 }
