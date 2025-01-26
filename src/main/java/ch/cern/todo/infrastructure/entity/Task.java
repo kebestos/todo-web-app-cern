@@ -6,35 +6,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-public class Task
-//        (@Id
-//                   @GeneratedValue(strategy = GenerationType.IDENTITY)
-//                   Long id,
-//
-////                   @Column(nullable = false)
-//                   String name,
-//
-//                   String description,
-//
-////                   @Temporal(TemporalType.TIME)
-////                   @Column(nullable = false)
-//                   Date deadline,
-//
-////                   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-////                   @JoinTable(
-////                           name = "category",
-////                           joinColumns = @JoinColumn(name = "task_id"),
-////                           inverseJoinColumns = @JoinColumn(name = "task_category_id")
-////                   )
-//                   Long categoryId)
-{
-//    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(
-//            name = "category",
-//            joinColumns = @JoinColumn(name = "task_id"),
-//            inverseJoinColumns = @JoinColumn(name = "task_category_id")
-//    )
-//    TaskCategory category;
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,8 +23,9 @@ public class Task
     @JoinColumn(name = "category_id")
     private TaskCategory category;
 
+    //TODO user in constructor  ?
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name = "user_id", nullable = false)
     private CustomUser user;
 
     public Task(Long id, String name, String description, Timestamp deadline, TaskCategory category) {

@@ -3,7 +3,7 @@ package ch.cern.todo.config;
 import ch.cern.todo.infrastructure.entity.CustomUser;
 import ch.cern.todo.infrastructure.entity.Role;
 import ch.cern.todo.infrastructure.repository.RoleRepository;
-import ch.cern.todo.infrastructure.repository.UserRepository;
+import ch.cern.todo.infrastructure.repository.CustomUserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,7 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CommandLineRunner init(RoleRepository roleRepository, UserRepository userRepository) {
+    public CommandLineRunner initUsersAndRoles(RoleRepository roleRepository, CustomUserRepository customUserRepository) {
         System.out.println("DATA initialized");
         return args -> {
             Role roleAdmin = new Role(null,"ADMIN");
@@ -62,8 +62,8 @@ public class SecurityConfig {
 
             roleRepository.save(roleAdmin);
             roleRepository.save(roleUser);
-            userRepository.save(new CustomUser(null,"admin", "admin", roles_admin,null));
-            userRepository.save(new CustomUser(null,"user", "user", roles_user,null));
+            customUserRepository.save(new CustomUser(null,"admin", "admin", roles_admin,null));
+            customUserRepository.save(new CustomUser(null,"user", "user", roles_user,null));
         };
     }
 }

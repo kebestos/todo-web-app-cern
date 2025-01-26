@@ -19,10 +19,10 @@ public class TaskSpecifications {
                 predicates.add(criteriaBuilder.equal(root.get("user_id"), userId));
             }
             if (taskName != null && !taskName.isEmpty()) {
-                predicates.add(criteriaBuilder.in(root.get(taskName)));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + taskName.toLowerCase() + "%"));
             }
             if (taskDescription != null && !taskDescription.isEmpty()) {
-                predicates.add(criteriaBuilder.in(root.get(taskDescription)));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + taskDescription.toLowerCase() + "%"));
             }
             if (taskDeadline != null) {
                 predicates.add(criteriaBuilder.equal(root.<Timestamp>get("deadline"), taskDeadline));

@@ -1,6 +1,6 @@
 package ch.cern.todo.config;
 
-import ch.cern.todo.infrastructure.repository.UserRepository;
+import ch.cern.todo.infrastructure.repository.CustomUserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final CustomUserRepository customUserRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDetailsServiceImpl(CustomUserRepository customUserRepository) {
+        this.customUserRepository = customUserRepository;
     }
 
     //TODO fix get roles
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+        return customUserRepository.findByUsername(username)
                 .map(user -> User
                         .withUsername(user.getUsername())
                         .password(user.getPassword())
