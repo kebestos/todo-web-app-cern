@@ -1,6 +1,7 @@
-package ch.cern.todo.controller.dto;
+package ch.cern.todo.controller.dto.mapper;
 
-import ch.cern.todo.infrastructure.entity.TaskCategory;
+import ch.cern.todo.controller.dto.TaskCategoryDTO;
+import ch.cern.todo.infrastructure.model.TaskCategory;
 import org.springframework.stereotype.Component;
 
 @Component

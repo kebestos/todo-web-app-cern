@@ -1,10 +1,10 @@
-package ch.cern.todo.service.task;
+package ch.cern.todo.service;
 
-import ch.cern.todo.infrastructure.entity.CustomUser;
-import ch.cern.todo.infrastructure.entity.Task;
+import ch.cern.todo.infrastructure.model.CustomUser;
+import ch.cern.todo.infrastructure.model.Task;
 import ch.cern.todo.infrastructure.repository.TaskRepository;
 import ch.cern.todo.infrastructure.repository.CustomUserRepository;
-import ch.cern.todo.model.TaskQuery;
+import ch.cern.todo.domain.TaskQuery;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

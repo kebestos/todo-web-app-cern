@@ -1,6 +1,6 @@
-package ch.cern.todo.service.task;
+package ch.cern.todo.service;
 
-import ch.cern.todo.infrastructure.entity.TaskCategory;
+import ch.cern.todo.infrastructure.model.TaskCategory;
 import ch.cern.todo.infrastructure.repository.TaskCategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

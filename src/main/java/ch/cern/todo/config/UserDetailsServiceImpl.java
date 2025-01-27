@@ -1,6 +1,6 @@
 package ch.cern.todo.config;
 
-import ch.cern.todo.infrastructure.entity.CustomUser;
+import ch.cern.todo.infrastructure.model.CustomUser;
 import ch.cern.todo.infrastructure.repository.CustomUserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

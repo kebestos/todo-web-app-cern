@@ -1,29 +1,26 @@
-package ch.cern.todo.infrastructure.entity;
+package ch.cern.todo.infrastructure.model;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-public class TaskCategory {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="category_id")
+    @Column(name = "role_id")
     private Long id;
 
     @Column(unique = true, nullable = false)
     private String name;
 
-    private String description;
-
-    public TaskCategory(Long id, String name, String description) {
+    public Role(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.description = description;
     }
 
-    public TaskCategory() {
+    public Role() {
     }
 
     public Long getId() {
@@ -34,20 +31,16 @@ public class TaskCategory {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskCategory that = (TaskCategory) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description);
+        Role role = (Role) o;
+        return Objects.equals(id, role.id) && Objects.equals(name, role.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description);
+        return Objects.hash(id, name);
     }
 }

@@ -1,7 +1,7 @@
 package ch.cern.todo.controller;
 
-import ch.cern.todo.infrastructure.entity.TaskCategory;
-import ch.cern.todo.service.task.TaskCategoryService;
+import ch.cern.todo.infrastructure.model.TaskCategory;
+import ch.cern.todo.service.TaskCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

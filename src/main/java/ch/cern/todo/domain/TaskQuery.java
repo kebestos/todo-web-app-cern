@@ -1,4 +1,4 @@
-package ch.cern.todo.model;
+package ch.cern.todo.domain;
 
 import java.util.Date;
 

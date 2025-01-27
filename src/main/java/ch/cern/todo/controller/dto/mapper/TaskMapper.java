@@ -1,6 +1,7 @@
-package ch.cern.todo.controller.dto;
+package ch.cern.todo.controller.dto.mapper;
 
-import ch.cern.todo.infrastructure.entity.Task;
+import ch.cern.todo.controller.dto.TaskDTO;
+import ch.cern.todo.infrastructure.model.Task;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;

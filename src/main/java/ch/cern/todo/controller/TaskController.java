@@ -1,10 +1,10 @@
 package ch.cern.todo.controller;
 
 import ch.cern.todo.controller.dto.TaskDTO;
-import ch.cern.todo.controller.dto.TaskMapper;
-import ch.cern.todo.infrastructure.entity.Task;
-import ch.cern.todo.model.TaskQuery;
-import ch.cern.todo.service.task.TaskService;
+import ch.cern.todo.controller.dto.mapper.TaskMapper;
+import ch.cern.todo.infrastructure.model.Task;
+import ch.cern.todo.domain.TaskQuery;
+import ch.cern.todo.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

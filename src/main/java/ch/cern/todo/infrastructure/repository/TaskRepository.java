@@ -1,6 +1,6 @@
 package ch.cern.todo.infrastructure.repository;
 
-import ch.cern.todo.infrastructure.entity.Task;
+import ch.cern.todo.infrastructure.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

@@ -1,7 +1,7 @@
 package ch.cern.todo;
 
 import ch.cern.todo.controller.TaskController;
-import ch.cern.todo.service.task.TaskService;
+import ch.cern.todo.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;

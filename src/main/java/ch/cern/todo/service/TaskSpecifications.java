@@ -1,6 +1,6 @@
-package ch.cern.todo.service.task;
+package ch.cern.todo.service;
 
-import ch.cern.todo.infrastructure.entity.Task;
+import ch.cern.todo.infrastructure.model.Task;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 

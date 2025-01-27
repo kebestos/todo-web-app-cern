@@ -1,4 +1,4 @@
-package ch.cern.todo.infrastructure.entity;
+package ch.cern.todo.infrastructure.model;
 
 import jakarta.persistence.*;
 
