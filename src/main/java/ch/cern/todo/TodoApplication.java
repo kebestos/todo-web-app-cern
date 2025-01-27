@@ -12,8 +12,7 @@ public class TodoApplication {
 		SpringApplication.run(TodoApplication.class, args);
 	}
 
-	//TODO Error service & test & Java doc
-	//TODO DTO taskQuery
+	//TODO test & Java doc
 	//TODO clean taskCategory controller and service
 
 }

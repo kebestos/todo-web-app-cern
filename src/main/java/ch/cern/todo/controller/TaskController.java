@@ -1,7 +1,9 @@
 package ch.cern.todo.controller;
 
 import ch.cern.todo.controller.dto.TaskDTO;
+import ch.cern.todo.controller.dto.TaskQueryDTO;
 import ch.cern.todo.controller.dto.mapper.TaskMapper;
+import ch.cern.todo.controller.dto.mapper.TaskQueryMapper;
 import ch.cern.todo.domain.TaskQuery;
 import ch.cern.todo.infrastructure.model.Task;
 import ch.cern.todo.service.TaskService;
@@ -15,15 +17,16 @@ import java.util.List;
 @RequestMapping("/api/task")
 public class TaskController {
 
-    //TODO logger & explain autowired
-
     private final TaskService taskService;
 
     private final TaskMapper taskMapper;
 
-    public TaskController(TaskService taskService, TaskMapper taskMapper) {
+    private final TaskQueryMapper taskQueryMapper;
+
+    public TaskController(TaskService taskService, TaskMapper taskMapper, TaskQueryMapper taskQueryMapper) {
         this.taskService = taskService;
         this.taskMapper = taskMapper;
+        this.taskQueryMapper = taskQueryMapper;
     }
 
     @PostMapping
@@ -77,9 +80,11 @@ public class TaskController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<TaskDTO>> getTasksByQuery(@RequestBody TaskQuery taskQuery, Principal principal) {
+    public ResponseEntity<List<TaskDTO>> getTasksByQuery(@RequestBody TaskQueryDTO taskQueryDto, Principal principal) {
 
         String userName = principal.getName();
+
+        TaskQuery taskQuery = taskQueryMapper.toTaskQuery(taskQueryDto);
 
         List<Task> tasks = taskService.getTasksByQuery(taskQuery, userName);
 

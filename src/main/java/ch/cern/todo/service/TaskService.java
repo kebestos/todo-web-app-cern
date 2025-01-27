@@ -100,7 +100,7 @@ public class TaskService {
         if (isAdmin(user) || taskQuery.userId().equals(user.getId())) {
 
             return taskRepository.findAll(
-                    TaskSpecifications.buildTaskQuery(
+                    TaskQuery.buildTaskQuery(
                             taskQuery.name(),
                             taskQuery.description(),
                             taskQuery.deadline(),
