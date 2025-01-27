@@ -24,28 +24,28 @@ public class TaskService {
         this.customUserRepository = customUserRepository;
     }
 
+    //TODO check category exist
     public Task createTask(Task task, String userName) {
         try {
             CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            user.getTasks().add(task);
+            Task taskToSave = new Task(task.getId(), task.getName(), task.getDescription(), task.getDeadline(), task.getCategory(),user);
 
-            customUserRepository.save(user);
-
-            return taskRepository.save(task);
+            return taskRepository.save(taskToSave);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     //TODO is task existing check ?
+    //TODO check task exist, check category exist
     public Task updateTask(Long taskId, Task taskUpdate, String userName) {
         //only user of the task or ADMIN
         try {
             CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             if (isAdmin(user) || isTaskBelongToUser(taskId, user)) {
-                Task taskUpdated = new Task(taskId, taskUpdate.getName(), taskUpdate.getDescription(), taskUpdate.getDeadline(), taskUpdate.getCategory());
+                Task taskUpdated = new Task(taskId, taskUpdate.getName(), taskUpdate.getDescription(), taskUpdate.getDeadline(), taskUpdate.getCategory(), user);
                 return taskRepository.save(taskUpdated);
             } else {
                 throw new RuntimeException("Unauthorized access");

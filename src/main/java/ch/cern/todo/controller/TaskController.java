@@ -1,5 +1,7 @@
 package ch.cern.todo.controller;
 
+import ch.cern.todo.controller.dto.TaskDTO;
+import ch.cern.todo.controller.dto.TaskMapper;
 import ch.cern.todo.infrastructure.entity.Task;
 import ch.cern.todo.model.TaskQuery;
 import ch.cern.todo.service.task.TaskService;
@@ -9,25 +11,39 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/api/task")
 public class TaskController {
 
+    //TODO logger & explain autowired
+
     private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
+//    @Autowired
+//    private ModelMapper modelMapper;
+
+    private final TaskMapper taskMapper;
+
+    //    @Autowired
+    public TaskController(TaskService taskService, TaskMapper taskMapper) {
         this.taskService = taskService;
+        this.taskMapper = taskMapper;
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task, Principal principal) {
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDto, Principal principal) {
         try {
             String userName = principal.getName();
 
+            Task task = taskMapper.toTask(taskDto);
+
             Task taskCreated = taskService.createTask(task, userName);
 
-            return ResponseEntity.ok(taskCreated);
+            TaskDTO taskCreatedDto = taskMapper.toTaskDto(taskCreated);
+
+            return ResponseEntity.ok(taskCreatedDto);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -85,4 +101,16 @@ public class TaskController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+//    private TaskDTO convertToDto(Task task, TimeZone timeZone) {
+//        TaskDTO taskDTO = modelMapper.map(task, TaskDTO.class);
+//        taskDTO.setDeadlineDate(task.getDeadline(), timeZone.toString());
+//        return taskDTO;
+//    }
+//
+//    private Task convertToEntity(TaskDTO taskDTO) throws ParseException {
+//        Task task = modelMapper.map(taskDTO, Task.class);
+//
+//        return task;
+//    }
 }

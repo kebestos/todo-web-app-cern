@@ -12,4 +12,6 @@ public class TodoApplication {
 		SpringApplication.run(TodoApplication.class, args);
 	}
 
+	//TODO DTO & Mapper & Error service & test & Java doc
+
 }

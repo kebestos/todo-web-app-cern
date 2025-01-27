@@ -2,8 +2,13 @@ package ch.cern.todo.config;
 
 import ch.cern.todo.infrastructure.entity.CustomUser;
 import ch.cern.todo.infrastructure.entity.Role;
+import ch.cern.todo.infrastructure.entity.Task;
+import ch.cern.todo.infrastructure.entity.TaskCategory;
 import ch.cern.todo.infrastructure.repository.RoleRepository;
 import ch.cern.todo.infrastructure.repository.CustomUserRepository;
+import ch.cern.todo.infrastructure.repository.TaskCategoryRepository;
+import ch.cern.todo.infrastructure.repository.TaskRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +21,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,8 +55,16 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+//    @Bean
+//    public ModelMapper modelMapper() {
+//        return new ModelMapper();
+//    }
+
     @Bean
-    public CommandLineRunner initUsersAndRoles(RoleRepository roleRepository, CustomUserRepository customUserRepository) {
+    public CommandLineRunner initUsersAndRoles(RoleRepository roleRepository,
+                                               CustomUserRepository customUserRepository,
+                                               TaskCategoryRepository taskCategoryRepository,
+                                               TaskRepository taskRepository) {
         System.out.println("DATA initialized");
         return args -> {
             Role roleAdmin = new Role(null,"ADMIN");
@@ -60,10 +75,25 @@ public class SecurityConfig {
             Set<Role> roles_user = new HashSet<>();
             roles_user.add(roleUser);
 
+            TaskCategory taskCategoryDev = new TaskCategory(null,"Dev","Technical development task");
+            TaskCategory taskCategoryStudy = new TaskCategory(null,"Study","Research task");
+
+            CustomUser admin = new CustomUser(null,"admin", "admin", roles_admin,null);
+            CustomUser user = new CustomUser(null,"user", "user", roles_user,null);
+
+            Task task = new Task(null,"API Post task","make an api rest to create task",
+                    LocalDateTime.of(2013, 4,23,18,30,20),taskCategoryDev, admin);
+
             roleRepository.save(roleAdmin);
             roleRepository.save(roleUser);
-            customUserRepository.save(new CustomUser(null,"admin", "admin", roles_admin,null));
-            customUserRepository.save(new CustomUser(null,"user", "user", roles_user,null));
+
+            customUserRepository.save(admin);
+            customUserRepository.save(user);
+
+            taskCategoryRepository.save(taskCategoryDev);
+            taskCategoryRepository.save(taskCategoryStudy);
+
+            taskRepository.save(task);
         };
     }
 }
