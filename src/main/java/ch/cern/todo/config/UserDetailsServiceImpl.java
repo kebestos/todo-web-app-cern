@@ -1,11 +1,15 @@
 package ch.cern.todo.config;
 
+import ch.cern.todo.infrastructure.entity.CustomUser;
 import ch.cern.todo.infrastructure.repository.CustomUserRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -16,15 +20,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.customUserRepository = customUserRepository;
     }
 
-    //TODO fix get roles
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return customUserRepository.findByUsername(username)
-                .map(user -> User
-                        .withUsername(user.getUsername())
-                        .password(user.getPassword())
-                        .roles("ADMIN")
-                        .build())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        CustomUser user = customUserRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new User(
+                user.getUsername(),
+                user.getPassword(),
+                user.getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+                        .collect(Collectors.toList())
+        );
     }
 }
