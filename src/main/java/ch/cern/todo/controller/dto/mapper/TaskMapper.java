@@ -4,7 +4,6 @@ import ch.cern.todo.controller.dto.TaskDTO;
 import ch.cern.todo.infrastructure.model.Task;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,7 +28,7 @@ public class TaskMapper {
                 taskCategoryMapper.toTaskCategoryDto(task.getCategory()));
     }
 
-    public Task toTask(TaskDTO taskDto) throws ParseException {
+    public Task toTask(TaskDTO taskDto) {
 
         return new Task(taskDto.getId(), taskDto.getName(), taskDto.getDescription(),
                 LocalDateTime.parse(taskDto.getDeadline(), DATE_TIME_FORMATTER),
