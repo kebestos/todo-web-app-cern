@@ -7,9 +7,11 @@ import ch.cern.todo.domain.TaskQuery;
 import ch.cern.todo.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -28,7 +30,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDto, Principal principal) {
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDto, Principal principal) throws ParseException {
         try {
             String userName = principal.getName();
 
@@ -40,7 +42,8 @@ public class TaskController {
 
             return ResponseEntity.ok(taskCreatedDto);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw e;
+//            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -1,10 +1,13 @@
 package ch.cern.todo.service;
 
+import ch.cern.todo.domain.TaskQuery;
 import ch.cern.todo.infrastructure.model.CustomUser;
 import ch.cern.todo.infrastructure.model.Task;
-import ch.cern.todo.infrastructure.repository.TaskRepository;
+import ch.cern.todo.infrastructure.model.TaskCategory;
 import ch.cern.todo.infrastructure.repository.CustomUserRepository;
-import ch.cern.todo.domain.TaskQuery;
+import ch.cern.todo.infrastructure.repository.TaskCategoryRepository;
+import ch.cern.todo.infrastructure.repository.TaskRepository;
+import ch.cern.todo.service.exception.TaskCreationFailed;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,21 +22,26 @@ public class TaskService {
 
     private final CustomUserRepository customUserRepository;
 
-    public TaskService(TaskRepository taskRepository, CustomUserRepository customUserRepository) {
+    private final TaskCategoryRepository taskCategoryRepository;
+
+    public TaskService(TaskRepository taskRepository, CustomUserRepository customUserRepository, TaskCategoryRepository taskCategoryRepository) {
         this.taskRepository = taskRepository;
         this.customUserRepository = customUserRepository;
+        this.taskCategoryRepository = taskCategoryRepository;
     }
 
-    //TODO check category exist
+
     public Task createTask(Task task, String userName) {
         try {
             CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            Task taskToSave = new Task(task.getId(), task.getName(), task.getDescription(), task.getDeadline(), task.getCategory(),user);
+            TaskCategory taskCategory = taskCategoryRepository.findById(task.getCategory().getId()).orElseThrow(() -> new RuntimeException("category doesn't exist"));
+
+            Task taskToSave = new Task(task.getId(), task.getName(), task.getDescription(), task.getDeadline(), taskCategory, user);
 
             return taskRepository.save(taskToSave);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new TaskCreationFailed(e.getMessage());
         }
     }
 
@@ -59,10 +67,6 @@ public class TaskService {
     /**
      * TODO separate Exception
      * TODO user can have a list of task
-     *
-     * @param taskId
-     * @param userName
-     * @return
      */
     public Task getTaskById(Long taskId, String userName) {
         try {

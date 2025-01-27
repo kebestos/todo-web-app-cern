@@ -13,5 +13,7 @@ public class TodoApplication {
 	}
 
 	//TODO Error service & test & Java doc
+	//TODO DTO taskQuery
+	//TODO clean taskCategory controller and service
 
 }
