@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * we can also use Model mapper or MapStruct
@@ -32,5 +33,11 @@ public class TaskMapper {
         return new Task(taskDto.getId(), taskDto.getName(), taskDto.getDescription(),
                 LocalDateTime.parse(taskDto.getDeadline(), DATE_TIME_FORMATTER),
                 taskCategoryMapper.toTaskCategory(taskDto.getTaskCategory()), null);
+    }
+
+    public List<TaskDTO> toTaskDtoList(List<Task> users) {
+        return users.stream()
+                .map(this::toTaskDto)
+                .toList();
     }
 }

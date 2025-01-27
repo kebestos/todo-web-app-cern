@@ -91,13 +91,15 @@ public class TaskController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Task>> getTasksByQuery(@RequestBody TaskQuery taskQuery, Principal principal) {
+    public ResponseEntity<List<TaskDTO>> getTasksByQuery(@RequestBody TaskQuery taskQuery, Principal principal) {
         try {
             String userName = principal.getName();
 
             List<Task> tasks = taskService.getTasksByQuery(taskQuery, userName);
 
-            return ResponseEntity.ok(tasks);
+            List<TaskDTO> taskDTOs = taskMapper.toTaskDtoList(tasks);
+
+            return ResponseEntity.ok(taskDTOs);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
