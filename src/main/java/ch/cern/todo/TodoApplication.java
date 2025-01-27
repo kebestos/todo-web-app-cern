@@ -13,6 +13,5 @@ public class TodoApplication {
 	}
 
 	//TODO test & Java doc
-	//TODO clean taskCategory controller and service
 
 }

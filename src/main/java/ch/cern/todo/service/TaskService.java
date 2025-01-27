@@ -32,7 +32,6 @@ public class TaskService {
         this.taskCategoryRepository = taskCategoryRepository;
     }
 
-
     public Task createTask(Task task, String userName) {
 
         CustomUser user = customUserRepository.findByUsername(userName)
@@ -63,7 +62,7 @@ public class TaskService {
 
             return taskRepository.save(taskUpdated);
         } else {
-            throw new UnAuthorizedException("Unauthorized access to the task");
+            throw new UnAuthorizedException("Unauthorized access");
         }
     }
 
