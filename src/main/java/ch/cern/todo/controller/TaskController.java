@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/api/task")
@@ -21,12 +20,8 @@ public class TaskController {
 
     private final TaskService taskService;
 
-//    @Autowired
-//    private ModelMapper modelMapper;
-
     private final TaskMapper taskMapper;
 
-    //    @Autowired
     public TaskController(TaskService taskService, TaskMapper taskMapper) {
         this.taskService = taskService;
         this.taskMapper = taskMapper;
@@ -50,26 +45,32 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long taskId, Principal principal) {
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long taskId, Principal principal) {
         try {
             String userName = principal.getName();
 
             Task task = taskService.getTaskById(taskId, userName);
 
-            return ResponseEntity.ok(task);
+            TaskDTO taskDto = taskMapper.toTaskDto(task);
+
+            return ResponseEntity.ok(taskDto);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long taskId, @RequestBody Task task, Principal principal) {
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long taskId, @RequestBody TaskDTO taskDto, Principal principal) {
         try {
             String userName = principal.getName();
 
-            Task taskUpdated = taskService.updateTask(taskId, task, userName);
+            Task taskToUpdate = taskMapper.toTask(taskDto);
 
-            return ResponseEntity.ok(taskUpdated);
+            Task taskUpdated = taskService.updateTask(taskId, taskToUpdate, userName);
+
+            TaskDTO taskUpdatedDto = taskMapper.toTaskDto(taskUpdated);
+
+            return ResponseEntity.ok(taskUpdatedDto);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -101,16 +102,4 @@ public class TaskController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-//    private TaskDTO convertToDto(Task task, TimeZone timeZone) {
-//        TaskDTO taskDTO = modelMapper.map(task, TaskDTO.class);
-//        taskDTO.setDeadlineDate(task.getDeadline(), timeZone.toString());
-//        return taskDTO;
-//    }
-//
-//    private Task convertToEntity(TaskDTO taskDTO) throws ParseException {
-//        Task task = modelMapper.map(taskDTO, Task.class);
-//
-//        return task;
-//    }
 }
