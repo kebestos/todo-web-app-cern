@@ -12,33 +12,32 @@ import java.util.List;
 public record TaskQuery(String name, String description, LocalDateTime deadline, Long categoryId, Long userId,
                         String deadlineCriteria) {
 
-    public static Specification<Task> buildTaskQuery(String taskName, String taskDescription,
-                                                     LocalDateTime taskDeadline, Long taskCategoryId, Long userId, String deadlineCriteria) {
+    public Specification<Task> buildTaskQuery() {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (userId != null) {
+            if (this.userId != null) {
                 root.fetch("user", JoinType.LEFT);
-                predicates.add(criteriaBuilder.equal(root.get("user").get("Id"), userId));
+                predicates.add(criteriaBuilder.equal(root.get("user").get("Id"), this.userId));
             }
-            if (taskName != null && !taskName.isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + taskName.toLowerCase() + "%"));
+            if (this.name != null && !name.isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + this.name.toLowerCase() + "%"));
             }
-            if (taskDescription != null && !taskDescription.isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + taskDescription.toLowerCase() + "%"));
+            if (this.description != null && !this.description.isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + this.description.toLowerCase() + "%"));
             }
-            if (taskDeadline != null && deadlineCriteria != null && deadlineCriteria.equals("EQUAL")) {
-                predicates.add(criteriaBuilder.equal(root.<LocalDateTime>get("deadline"), taskDeadline));
+            if (this.deadline != null && this.deadlineCriteria != null && this.deadlineCriteria.equals("EQUAL")) {
+                predicates.add(criteriaBuilder.equal(root.<LocalDateTime>get("deadline"), this.deadline));
             }
-            if (taskDeadline != null && deadlineCriteria != null && deadlineCriteria.equals("GREATER")) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.<LocalDateTime>get("deadline"), taskDeadline));
+            if (this.deadline != null && this.deadlineCriteria != null && this.deadlineCriteria.equals("GREATER")) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.<LocalDateTime>get("deadline"), this.deadline));
             }
-            if (taskDeadline != null && deadlineCriteria != null && deadlineCriteria.equals("LESS")) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.<LocalDateTime>get("deadline"), taskDeadline));
+            if (this.deadline != null && this.deadlineCriteria != null && this.deadlineCriteria.equals("LESS")) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.<LocalDateTime>get("deadline"), this.deadline));
             }
-            if (taskCategoryId != null) {
+            if (this.categoryId != null) {
                 root.fetch("category", JoinType.LEFT);
-                predicates.add(criteriaBuilder.equal(root.get("category").get("Id"), taskCategoryId));
+                predicates.add(criteriaBuilder.equal(root.get("category").get("Id"), this.categoryId));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

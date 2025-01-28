@@ -99,18 +99,9 @@ public class TaskService {
         CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage()));
 
         if (isAdmin(user) || taskQuery.userId().equals(user.getId())) {
-
-            List<Task> tasks = taskRepository.findAll(
-                    TaskQuery.buildTaskQuery(
-                            taskQuery.name(),
-                            taskQuery.description(),
-                            taskQuery.deadline(),
-                            taskQuery.categoryId(),
-                            taskQuery.userId(),
-                            taskQuery.deadlineCriteria()
-                    )
+            return taskRepository.findAll(
+                    taskQuery.buildTaskQuery()
             );
-            return tasks;
         } else {
             throw new UnAuthorizedException(UNAUTHORIZED_ACCESS.getMessage());
         }
