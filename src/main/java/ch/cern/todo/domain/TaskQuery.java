@@ -14,6 +14,7 @@ public record TaskQuery(String name, String description, LocalDateTime deadline,
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            //todo convert localdatetime to date for the predicat
             if (userId != null) {
                 predicates.add(criteriaBuilder.equal(root.get("user_id"), userId));
             }

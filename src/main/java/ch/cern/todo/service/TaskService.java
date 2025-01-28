@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static ch.cern.todo.service.exception.ExceptionMessage.*;
+
 @Service
 @Transactional
 public class TaskService {
@@ -35,10 +37,10 @@ public class TaskService {
     public Task createTask(Task task, String userName) {
 
         CustomUser user = customUserRepository.findByUsername(userName)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage()));
 
         TaskCategory taskCategory = taskCategoryRepository.findById(task.getCategory().getId())
-                .orElseThrow(() -> new TaskCategoryNotFoundException("Task category not found"));
+                .orElseThrow(() -> new TaskCategoryNotFoundException(TASK_CATEGORY_NOT_FOUND.getMessage()));
 
         Task taskToSave = new Task(task.getId(), task.getName(), task.getDescription(), task.getDeadline(), taskCategory, user);
 
@@ -48,13 +50,13 @@ public class TaskService {
     public Task updateTask(Long taskId, Task taskToUpdate, String userName) {
 
         CustomUser user = customUserRepository.findByUsername(userName)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage()));
 
         TaskCategory taskCategory = taskCategoryRepository.findById(taskToUpdate.getCategory().getId())
-                .orElseThrow(() -> new TaskCategoryNotFoundException("Task category not found"));
+                .orElseThrow(() -> new TaskCategoryNotFoundException(TASK_CATEGORY_NOT_FOUND.getMessage()));
 
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException("Task to update not found"));
+                .orElseThrow(() -> new TaskNotFoundException(TASK_NOT_FOUND.getMessage()));
 
         if (isAdmin(user) || isTaskBelongToUser(taskId, user)) {
 
@@ -62,39 +64,39 @@ public class TaskService {
 
             return taskRepository.save(taskUpdated);
         } else {
-            throw new UnAuthorizedException("Unauthorized access");
+            throw new UnAuthorizedException(UNAUTHORIZED_ACCESS.getMessage());
         }
     }
 
     public Task getTaskById(Long taskId, String userName) {
 
-        CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage()));
 
         if (isAdmin(user) || isTaskBelongToUser(taskId, user)) {
 
-            return taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+            return taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(TASK_NOT_FOUND.getMessage()));
         } else {
-            throw new UnAuthorizedException("Unauthorized access");
+            throw new UnAuthorizedException(UNAUTHORIZED_ACCESS.getMessage());
         }
     }
 
     public void deleteTask(Long taskId, String userName) {
 
-        CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage()));
 
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task to update not found"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(TASK_NOT_FOUND.getMessage()));
 
         if (isAdmin(user) || isTaskBelongToUser(taskId, user)) {
 
             taskRepository.deleteById(taskId);
         } else {
-            throw new UnAuthorizedException("Unauthorized access");
+            throw new UnAuthorizedException(UNAUTHORIZED_ACCESS.getMessage());
         }
     }
 
     public List<Task> getTasksByQuery(TaskQuery taskQuery, String userName) {
 
-        CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        CustomUser user = customUserRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage()));
 
         if (isAdmin(user) || taskQuery.userId().equals(user.getId())) {
 
@@ -108,7 +110,7 @@ public class TaskService {
                     )
             );
         } else {
-            throw new UnAuthorizedException("Unauthorized access");
+            throw new UnAuthorizedException(UNAUTHORIZED_ACCESS.getMessage());
         }
     }
 

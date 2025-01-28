@@ -8,9 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * we can also use Model mapper or MapStruct
- */
 @Component
 public class TaskMapper {
 
