@@ -122,6 +122,7 @@ class TaskServiceTest {
                     taskService.createTask(taskInput, username)
             );
 
+            // Assert
             assertEquals(TASK_CATEGORY_NOT_FOUND.getMessage(), exception.getMessage());
             verify(customUserRepository, times(1)).findByUsername(username);
             verify(taskCategoryRepository, times(1)).findById(taskCategory.getId());
@@ -153,6 +154,7 @@ class TaskServiceTest {
             when(customUserRepository.findByUsername(userName)).thenReturn(Optional.of(user));
             when(taskCategoryRepository.findById(taskToUpdate.getCategory().getId())).thenReturn(Optional.of(taskCategory));
             when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+            when(taskRepository.save(any())).thenReturn(existingTask);
 
             // Act
             taskService.updateTask(taskId, taskToUpdate, userName);

@@ -67,6 +67,7 @@ class TaskControllerTest {
 
     @Test
     void createTask() throws Exception {
+        // Arrange
         Set<Role> roles_admin = new HashSet<>();
         roles_admin.add(new Role(null, "ADMIN"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -84,6 +85,7 @@ class TaskControllerTest {
         User user = new User("admin", "admin", AuthorityUtils.createAuthorityList("ADMIN"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(post("/api/task")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(taskDto))
@@ -100,7 +102,7 @@ class TaskControllerTest {
 
     @Test
     void getTaskById() throws Exception {
-
+        // Arrange
         Set<Role> roles_admin = new HashSet<>();
         roles_admin.add(new Role(null, "ADMIN"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -117,6 +119,7 @@ class TaskControllerTest {
         User user = new User("admin", "admin", AuthorityUtils.createAuthorityList("ADMIN"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(get("/api/task/1")
                         .principal(testingAuthenticationToken))
                 .andExpect(status().isOk())
@@ -131,7 +134,7 @@ class TaskControllerTest {
 
     @Test
     void updateTask() throws Exception {
-
+        // Arrange
         Set<Role> roles_admin = new HashSet<>();
         roles_admin.add(new Role(null, "ADMIN"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -149,6 +152,7 @@ class TaskControllerTest {
         User user = new User("admin", "admin", AuthorityUtils.createAuthorityList("ADMIN"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(put("/api/task/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(taskDto))
@@ -165,7 +169,7 @@ class TaskControllerTest {
 
     @Test
     void updateTaskUnAuthorizedException() throws Exception {
-
+        // Arrange
         Set<Role> roles_user = new HashSet<>();
         roles_user.add(new Role(null, "USER"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -184,6 +188,7 @@ class TaskControllerTest {
         User user = new User("user", "user", AuthorityUtils.createAuthorityList("USER"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(put("/api/task/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(taskDto))
@@ -197,7 +202,7 @@ class TaskControllerTest {
 
     @Test
     void updateTaskNotFoundException() throws Exception {
-
+        // Arrange
         Set<Role> roles_user = new HashSet<>();
         roles_user.add(new Role(null, "USER"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -216,6 +221,7 @@ class TaskControllerTest {
         User user = new User("user", "user", AuthorityUtils.createAuthorityList("USER"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(put("/api/task/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(taskDto))
@@ -229,7 +235,7 @@ class TaskControllerTest {
 
     @Test
     void updateTaskCategoryNotFoundException() throws Exception {
-
+        // Arrange
         Set<Role> roles_user = new HashSet<>();
         roles_user.add(new Role(null, "USER"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -248,6 +254,7 @@ class TaskControllerTest {
         User user = new User("user", "user", AuthorityUtils.createAuthorityList("USER"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(put("/api/task/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(taskDto))
@@ -261,7 +268,7 @@ class TaskControllerTest {
 
     @Test
     void updateUsernameNotFoundException() throws Exception {
-
+        // Arrange
         Set<Role> roles_user = new HashSet<>();
         roles_user.add(new Role(null, "USER"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -280,6 +287,7 @@ class TaskControllerTest {
         User user = new User("user", "user", AuthorityUtils.createAuthorityList("USER"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(put("/api/task/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(taskDto))
@@ -293,12 +301,13 @@ class TaskControllerTest {
 
     @Test
     void deleteTask() throws Exception {
-
+        // Arrange
         Mockito.doNothing().when(taskService).deleteTask(1L, "admin");
 
         User user = new User("admin", "admin", AuthorityUtils.createAuthorityList("ADMIN"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
+        // Act & Assert
         mockMvc.perform(delete("/api/task/1")
                         .principal(testingAuthenticationToken))
                 .andExpect(status().isNoContent());
@@ -306,7 +315,7 @@ class TaskControllerTest {
 
     @Test
     void getTasksByQuery() throws Exception {
-
+        // Arrange
         Set<Role> roles_admin = new HashSet<>();
         roles_admin.add(new Role(null, "ADMIN"));
         Task task = new Task(1L, "API Post task", "make an api rest to create task",
@@ -330,12 +339,13 @@ class TaskControllerTest {
                 "2013-04-23T18:25:43", 1L, 1L, "EQUAL");
 
         TaskQuery taskQuery = new TaskQuery("API Post task", "make an api rest to create",
-                LocalDateTime.of(2013, 4, 23, 18, 25, 43), 1L, 1L,"EQUAL");
+                LocalDateTime.of(2013, 4, 23, 18, 25, 43), 1L, 1L, "EQUAL");
 
         Mockito.when(taskQueryMapper.toTaskQuery(Mockito.any(TaskQueryDTO.class))).thenReturn(taskQuery);
         Mockito.when(taskService.getTasksByQuery(Mockito.any(TaskQuery.class), Mockito.any(String.class))).thenReturn(tasks);
         Mockito.when(taskMapper.toTaskDtoList(Mockito.anyList())).thenReturn(taskDTOS);
 
+        // Act & Assert
         mockMvc.perform(get("/api/task/search")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(taskQueryDTO))

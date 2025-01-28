@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class TaskTest {
 
@@ -44,8 +45,8 @@ class TaskTest {
         Task task2 = new Task(taskId, taskName, description, deadline, category, user);
 
         // Act & Assert
-        assertEquals(task1, task2); // Test equals
-        assertEquals(task1.hashCode(), task2.hashCode()); // Test hashCode
+        assertEquals(task1, task2);
+        assertEquals(task1.hashCode(), task2.hashCode());
     }
 
     @Test
