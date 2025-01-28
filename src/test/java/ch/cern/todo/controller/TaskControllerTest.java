@@ -326,10 +326,11 @@ class TaskControllerTest {
         User user = new User("admin", "admin", AuthorityUtils.createAuthorityList("ADMIN"));
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(user, null);
 
-        TaskQueryDTO taskQueryDTO = new TaskQueryDTO("API Post task", "make an api rest to create", "2013-04-23T18:25:43", 1L, 1L);
+        TaskQueryDTO taskQueryDTO = new TaskQueryDTO("API Post task", "make an api rest to create",
+                "2013-04-23T18:25:43", 1L, 1L, "EQUAL");
 
         TaskQuery taskQuery = new TaskQuery("API Post task", "make an api rest to create",
-                LocalDateTime.of(2013, 4, 23, 18, 25, 43), 1L, 1L);
+                LocalDateTime.of(2013, 4, 23, 18, 25, 43), 1L, 1L,"EQUAL");
 
         Mockito.when(taskQueryMapper.toTaskQuery(Mockito.any(TaskQueryDTO.class))).thenReturn(taskQuery);
         Mockito.when(taskService.getTasksByQuery(Mockito.any(TaskQuery.class), Mockito.any(String.class))).thenReturn(tasks);
