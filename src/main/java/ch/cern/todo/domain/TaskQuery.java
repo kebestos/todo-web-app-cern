@@ -27,7 +27,9 @@ public record TaskQuery(String name, String description, LocalDateTime deadline,
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + this.description.toLowerCase() + "%"));
             }
             if (this.deadline != null && this.deadlineCriteria != null && this.deadlineCriteria.equals("EQUAL")) {
-                predicates.add(criteriaBuilder.equal(root.<LocalDateTime>get("deadline"), this.deadline));
+                LocalDateTime localDateTimeBefore = LocalDateTime.of(deadline.getYear(),deadline.getMonth(),deadline.getDayOfMonth(),0,0,0);
+                LocalDateTime localDateTimeAfter =  LocalDateTime.of(deadline.getYear(),deadline.getMonth(),deadline.getDayOfMonth(),23,59,59);
+                predicates.add(criteriaBuilder.between(root.<LocalDateTime>get("deadline"), localDateTimeBefore,localDateTimeAfter));
             }
             if (this.deadline != null && this.deadlineCriteria != null && this.deadlineCriteria.equals("GREATER")) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.<LocalDateTime>get("deadline"), this.deadline));

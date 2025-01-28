@@ -78,13 +78,13 @@ public class SecurityConfig {
                     LocalDateTime.of(2013, 4, 23, 18, 30, 20), taskCategoryDev, admin);
 
             Task task_1 = new Task(null, "task Name 1", "task description 1",
-                    LocalDateTime.of(2013, 4, 20, 18, 30, 20), taskCategoryDev, user);
+                    LocalDateTime.of(2013, 4, 22, 23, 59, 59), taskCategoryDev, user);
             Task task_2 = new Task(null, "task Name 2", "task description 2",
                     LocalDateTime.of(2013, 4, 25, 18, 30, 20), taskCategoryDev, user);
             Task task_3 = new Task(null, "task Name 3", "task description 3",
-                    LocalDateTime.of(2013, 4, 23, 18, 30, 20), taskCategoryStudy, user);
+                    LocalDateTime.of(2013, 4, 23, 0, 0, 0), taskCategoryStudy, user);
             Task task_4 = new Task(null, "diff", "diff",
-                    LocalDateTime.of(2013, 4, 23, 18, 30, 20), taskCategoryStudy, user);
+                    LocalDateTime.of(2013, 4, 23, 23, 59, 59), taskCategoryStudy, user);
 
             roleRepository.save(roleAdmin);
             roleRepository.save(roleUser);

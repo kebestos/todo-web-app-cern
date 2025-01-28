@@ -37,6 +37,7 @@ class TaskQueryTest {
         // Mock the methods of CriteriaBuilder to return mockPredicate
         when(criteriaBuilder.like(any(Expression.class), anyString())).thenReturn(mockPredicate);
         when(criteriaBuilder.equal(any(Expression.class), any())).thenReturn(mockPredicate);
+        when(criteriaBuilder.between(any(Expression.class), any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(mockPredicate);
         when(criteriaBuilder.greaterThanOrEqualTo(any(Expression.class), any(LocalDateTime.class))).thenReturn(mockPredicate);
         when(criteriaBuilder.lessThanOrEqualTo(any(Expression.class), any(LocalDateTime.class))).thenReturn(mockPredicate);
         when(criteriaBuilder.and(any(Predicate[].class))).thenReturn(mockPredicate);
@@ -63,7 +64,7 @@ class TaskQueryTest {
     }
 
     @Test
-    void testBuildTaskQuery_WithDeadlineAndCriteria() {
+    void testBuildTaskQuery_WithDeadlineAndCriteriaGreater() {
         // Arrange
         LocalDateTime deadline = LocalDateTime.now();
         String deadlineCriteria = "GREATER";
@@ -78,6 +79,42 @@ class TaskQueryTest {
         // Assert
         assertNotNull(result);
         verify(criteriaBuilder, times(1)).greaterThanOrEqualTo(any(), eq(deadline));
+    }
+
+    @Test
+    void testBuildTaskQuery_WithDeadlineAndCriteriaEqual() {
+        // Arrange
+        LocalDateTime deadline = LocalDateTime.now();
+        String deadlineCriteria = "EQUAL";
+        TaskQuery taskQuery = new TaskQuery(null, null, deadline, null, null, deadlineCriteria);
+
+        when(root.get("deadline")).thenReturn(mock(Path.class));
+
+        // Act
+        Specification<Task> specification = taskQuery.buildTaskQuery();
+        Predicate result = specification.toPredicate(root, query, criteriaBuilder);
+
+        // Assert
+        assertNotNull(result);
+        verify(criteriaBuilder, times(1)).between(any(), any(LocalDateTime.class), any(LocalDateTime.class));
+    }
+
+    @Test
+    void testBuildTaskQuery_WithDeadlineAndCriteriaLess() {
+        // Arrange
+        LocalDateTime deadline = LocalDateTime.now();
+        String deadlineCriteria = "LESS";
+        TaskQuery taskQuery = new TaskQuery(null, null, deadline, null, null, deadlineCriteria);
+
+        when(root.get("deadline")).thenReturn(mock(Path.class));
+
+        // Act
+        Specification<Task> specification = taskQuery.buildTaskQuery();
+        Predicate result = specification.toPredicate(root, query, criteriaBuilder);
+
+        // Assert
+        assertNotNull(result);
+        verify(criteriaBuilder, times(1)).lessThanOrEqualTo(any(), eq(deadline));
     }
 
     @Test
