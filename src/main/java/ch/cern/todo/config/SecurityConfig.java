@@ -77,6 +77,15 @@ public class SecurityConfig {
             Task task = new Task(null, "API Post task", "make an api rest to create task",
                     LocalDateTime.of(2013, 4, 23, 18, 30, 20), taskCategoryDev, admin);
 
+            Task task_1 = new Task(null, "task Name 1", "task description 1",
+                    LocalDateTime.of(2013, 4, 20, 18, 30, 20), taskCategoryDev, user);
+            Task task_2 = new Task(null, "task Name 2", "task description 2",
+                    LocalDateTime.of(2013, 4, 25, 18, 30, 20), taskCategoryDev, user);
+            Task task_3 = new Task(null, "task Name 3", "task description 3",
+                    LocalDateTime.of(2013, 4, 23, 18, 30, 20), taskCategoryStudy, user);
+            Task task_4 = new Task(null, "diff", "diff",
+                    LocalDateTime.of(2013, 4, 23, 18, 30, 20), taskCategoryStudy, user);
+
             roleRepository.save(roleAdmin);
             roleRepository.save(roleUser);
 
@@ -87,6 +96,10 @@ public class SecurityConfig {
             taskCategoryRepository.save(taskCategoryStudy);
 
             taskRepository.save(task);
+            taskRepository.save(task_1);
+            taskRepository.save(task_2);
+            taskRepository.save(task_3);
+            taskRepository.save(task_4);
         };
     }
 }

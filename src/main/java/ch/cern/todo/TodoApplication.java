@@ -12,6 +12,4 @@ public class TodoApplication {
 		SpringApplication.run(TodoApplication.class, args);
 	}
 
-	//TODO test & Java doc
-
 }

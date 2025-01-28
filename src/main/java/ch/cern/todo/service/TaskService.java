@@ -100,15 +100,17 @@ public class TaskService {
 
         if (isAdmin(user) || taskQuery.userId().equals(user.getId())) {
 
-            return taskRepository.findAll(
+            List<Task> tasks = taskRepository.findAll(
                     TaskQuery.buildTaskQuery(
                             taskQuery.name(),
                             taskQuery.description(),
                             taskQuery.deadline(),
                             taskQuery.categoryId(),
-                            taskQuery.userId()
+                            taskQuery.userId(),
+                            taskQuery.deadlineCriteria()
                     )
             );
+            return tasks;
         } else {
             throw new UnAuthorizedException(UNAUTHORIZED_ACCESS.getMessage());
         }

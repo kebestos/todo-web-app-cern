@@ -15,12 +15,15 @@ public class TaskQueryDTO {
 
     private Long userId;
 
-    public TaskQueryDTO(String name, String description, String deadline, Long categoryId, Long userId) {
+    private String deadlineCriteria;
+
+    public TaskQueryDTO(String name, String description, String deadline, Long categoryId, Long userId, String deadlineCriteria) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.categoryId = categoryId;
         this.userId = userId;
+        this.deadlineCriteria = deadlineCriteria;
     }
 
     public TaskQueryDTO() {
@@ -64,5 +67,13 @@ public class TaskQueryDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getDeadlineCriteria() {
+        return deadlineCriteria;
+    }
+
+    public void setDeadlineCriteria(String deadlineCriteria) {
+        this.deadlineCriteria = deadlineCriteria;
     }
 }

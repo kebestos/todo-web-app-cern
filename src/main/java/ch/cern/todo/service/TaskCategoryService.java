@@ -7,6 +7,8 @@ import ch.cern.todo.service.exception.TaskNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static ch.cern.todo.service.exception.ExceptionMessage.TASK_CATEGORY_NOT_FOUND;
+
 @Service
 @Transactional
 public class TaskCategoryService {
@@ -22,7 +24,7 @@ public class TaskCategoryService {
     }
 
     public TaskCategory updateTaskCategory(Long taskCategoryId, TaskCategory taskCategoryUpdate) {
-        taskCategoryRepository.findById(taskCategoryId).orElseThrow(() -> new TaskNotFoundException("Task category not found"));
+        taskCategoryRepository.findById(taskCategoryId).orElseThrow(() -> new TaskNotFoundException(TASK_CATEGORY_NOT_FOUND.getMessage()));
 
         TaskCategory taskCategoryUpdated = new TaskCategory(taskCategoryId, taskCategoryUpdate.getName(), taskCategoryUpdate.getDescription());
 
@@ -30,7 +32,7 @@ public class TaskCategoryService {
     }
 
     public TaskCategory getTaskCategoryById(Long taskCategoryId) {
-        return taskCategoryRepository.findById(taskCategoryId).orElseThrow(() -> new TaskCategoryNotFoundException("Task category not found"));
+        return taskCategoryRepository.findById(taskCategoryId).orElseThrow(() -> new TaskCategoryNotFoundException(TASK_CATEGORY_NOT_FOUND.getMessage()));
     }
 
     public void deleteTaskCategory(Long taskCategoryId) {
