@@ -16,7 +16,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -44,8 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-//        return  new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -71,8 +70,8 @@ public class SecurityConfig {
             TaskCategory taskCategoryDev = new TaskCategory(null, "Dev", "Technical development task");
             TaskCategory taskCategoryStudy = new TaskCategory(null, "Study", "Research task");
 
-            CustomUser admin = new CustomUser(null, "admin", "admin", roles_admin, null);
-            CustomUser user = new CustomUser(null, "user", "user", roles_user, null);
+            CustomUser admin = new CustomUser(null, "admin", new BCryptPasswordEncoder().encode("admin"), roles_admin, null);
+            CustomUser user = new CustomUser(null, "user", new BCryptPasswordEncoder().encode("user"), roles_user, null);
 
             Task task = new Task(null, "API Post task", "make an api rest to create task",
                     LocalDateTime.of(2013, 4, 23, 18, 30, 20), taskCategoryDev, admin);
