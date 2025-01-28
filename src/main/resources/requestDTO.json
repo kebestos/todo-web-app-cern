@@ -1,5 +1,5 @@
 {
-  "taskDto" : {
+  "taskDto": {
     "name": "research about spring security",
     "description": "explain how spring security work",
     "deadline": "2013-04-23T18:25:43",
@@ -9,12 +9,26 @@
       "description": "Research task"
     }
   },
-  "TaskQueryDto" : {
-    "name": "taskName",
+  "TaskQueryDto":  {
+    "deadline": "2013-04-23T18:25:44",
+    "deadlineCriteria": "EQUAL",
+    "categoryId": 2,
+    "userId": 2
+  },
+  "TaskQueryDtoGreater": {
+    "name": "task Name",
     "description": "task description",
     "deadline": "2013-04-19T18:25:44",
-    "deadlineCriteria": "EQUAL",
+    "deadlineCriteria": "GREATER",
     "categoryId": 1,
+    "userId": 2
+  },
+  "TaskQueryDtoLess":  {
+    "name": "task Name",
+    "description": "task description",
+    "deadline": "2013-04-30T18:25:44",
+    "deadlineCriteria": "LESS",
+    "categoryId": 2,
     "userId" : 2
   }
 }
