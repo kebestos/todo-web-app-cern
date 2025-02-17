@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +38,7 @@ class TaskIntegrationTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"}) // Simulate an authenticated user
-    public void testCreateTask() throws Exception {
+    public void createTask() throws Exception {
         // Arrange
         TaskDTO taskDto = new TaskDTO(null, "API Post task", "make an api rest to create task", "2013-04-23T18:25:43",
                 new TaskCategoryDTO(1L, "Dev", "Technical development task"));
@@ -50,6 +51,25 @@ class TaskIntegrationTest {
                 .andExpect(jsonPath("$.name", is("API Post task")))
                 .andExpect(jsonPath("$.description", is("make an api rest to create task")))
                 .andExpect(jsonPath("$.deadline", is("2013-04-23T18:25:43")))
+                .andExpect(jsonPath("$.taskCategory.id", is(1)))
+                .andExpect(jsonPath("$.taskCategory.name", is("Dev")))
+                .andExpect(jsonPath("$.taskCategory.description", is("Technical development task")));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"}) // Simulate an authenticated user
+    public void getTaskById() throws Exception {
+        // Arrange
+        TaskDTO taskDto = new TaskDTO(null, "API Post task", "make an api rest to create task", "2013-04-23T18:25:43",
+                new TaskCategoryDTO(1L, "Dev", "Technical development task"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/task/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("API Post task")))
+                .andExpect(jsonPath("$.description", is("make an api rest to create task")))
+                .andExpect(jsonPath("$.deadline", is("2013-04-23T18:30:20")))
                 .andExpect(jsonPath("$.taskCategory.id", is(1)))
                 .andExpect(jsonPath("$.taskCategory.name", is("Dev")))
                 .andExpect(jsonPath("$.taskCategory.description", is("Technical development task")));
