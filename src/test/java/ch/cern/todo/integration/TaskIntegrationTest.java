@@ -14,9 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static ch.cern.todo.service.exception.ExceptionMessage.USER_NOT_FOUND;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,5 +73,23 @@ class TaskIntegrationTest {
                 .andExpect(jsonPath("$.taskCategory.id", is(1)))
                 .andExpect(jsonPath("$.taskCategory.name", is("Dev")))
                 .andExpect(jsonPath("$.taskCategory.description", is("Technical development task")));
+    }
+
+    @Test
+    @WithMockUser(username = "nonexistent_user", roles = {"USER"}) // Simulate an authenticated user
+    public void updateUsernameNotFoundException() throws Exception {
+        // Arrange
+        TaskDTO taskDto = new TaskDTO(1L, "API Post task", "make an api rest to create task", "2013-04-23T18:25:43",
+                new TaskCategoryDTO(1L, "Dev", "Technical development task"));
+
+        // Act & Assert
+        mockMvc.perform(put("/api/task/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(taskDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.error", is("Not Found")))
+                .andExpect(jsonPath("$.message", is(USER_NOT_FOUND.getMessage())))
+                .andExpect(jsonPath("$.path", is("uri=/api/task/1")));
     }
 }
