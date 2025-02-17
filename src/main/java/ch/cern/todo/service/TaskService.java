@@ -10,6 +10,8 @@ import ch.cern.todo.infrastructure.repository.TaskRepository;
 import ch.cern.todo.service.exception.TaskCategoryNotFoundException;
 import ch.cern.todo.service.exception.TaskNotFoundException;
 import ch.cern.todo.service.exception.UnAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ import static ch.cern.todo.service.exception.ExceptionMessage.*;
 @Service
 @Transactional
 public class TaskService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
 
     private final TaskRepository taskRepository;
 
@@ -35,16 +39,22 @@ public class TaskService {
     }
 
     public Task createTask(Task task, String userName) {
+        LOGGER.info("createTask is called in TaskService with parameter Task: {} and String userName {}", task, userName);
 
         CustomUser user = customUserRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.getMessage()));
+        LOGGER.info("findByUsername from custom user repository is called with output Custom user: {}", user);
 
         TaskCategory taskCategory = taskCategoryRepository.findById(task.getCategory().getId())
                 .orElseThrow(() -> new TaskCategoryNotFoundException(TASK_CATEGORY_NOT_FOUND.getMessage()));
+        LOGGER.info("findById from task category repository is called with output Task Category: {}", taskCategory);
 
         Task taskToSave = new Task(task.getId(), task.getName(), task.getDescription(), task.getDeadline(), taskCategory, user);
 
-        return taskRepository.save(taskToSave);
+        Task taskSaved = taskRepository.save(taskToSave);
+        LOGGER.info("save from task repository is called with parameter Task: {} and output Task: {}", taskToSave, taskSaved);
+
+        return taskSaved;
     }
 
     public Task updateTask(Long taskId, Task taskToUpdate, String userName) {

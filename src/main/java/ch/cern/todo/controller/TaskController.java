@@ -7,6 +7,8 @@ import ch.cern.todo.controller.dto.mapper.TaskQueryMapper;
 import ch.cern.todo.domain.TaskQuery;
 import ch.cern.todo.infrastructure.model.Task;
 import ch.cern.todo.service.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,8 @@ public class TaskController {
 
     private final TaskQueryMapper taskQueryMapper;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
+
     public TaskController(TaskService taskService, TaskMapper taskMapper, TaskQueryMapper taskQueryMapper) {
         this.taskService = taskService;
         this.taskMapper = taskMapper;
@@ -31,14 +35,19 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDto, Principal principal) {
+        LOGGER.info("createTask is called in TaskController with parameter TaskDTO: {} and Principal {}", taskDto, principal);
 
         String userName = principal.getName();
+        LOGGER.info("Principal has userName: {}", userName);
 
         Task task = taskMapper.toTask(taskDto);
+        LOGGER.info("mapper toTask is called in createTask with output Task: {}", task);
 
         Task taskCreated = taskService.createTask(task, userName);
+        LOGGER.info("service createTask is called with output Task created: {}", taskCreated);
 
         TaskDTO taskCreatedDto = taskMapper.toTaskDto(taskCreated);
+        LOGGER.info("mapper toTaskDto is called in createTask with output TaskDTO: {}", taskCreatedDto);
 
         return ResponseEntity.ok(taskCreatedDto);
     }
