@@ -38,6 +38,12 @@ public class TaskService {
         this.taskCategoryRepository = taskCategoryRepository;
     }
 
+    /**
+     * Service to created and saved a new task in the repository
+     * @param task - Task information to saved
+     * @param userName - username of the current user
+     * @return Task created if the service run successfully
+     */
     public Task createTask(Task task, String userName) {
         LOGGER.info("createTask is called in TaskService with parameter Task: {} and String userName {}", task, userName);
 

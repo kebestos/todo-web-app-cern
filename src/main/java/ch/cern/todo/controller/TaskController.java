@@ -33,6 +33,12 @@ public class TaskController {
         this.taskQueryMapper = taskQueryMapper;
     }
 
+    /**
+     * EndPoint REST to create new Task
+     * @param taskDto - Request Body parameter with information to create a new task
+     * @param principal - Principal to get all data from the current user in the system
+     * @return TaskDTO is return if the service successfully saved a new Task
+     */
     @PostMapping
     public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDto, Principal principal) {
         LOGGER.info("createTask is called in TaskController with parameter TaskDTO: {} and Principal {}", taskDto, principal);
