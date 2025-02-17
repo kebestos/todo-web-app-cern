@@ -65,4 +65,15 @@ public class TaskDTO {
     public void setTaskCategory(TaskCategoryDTO taskCategory) {
         this.taskCategory = taskCategory;
     }
+
+    @Override
+    public String toString() {
+        return "TaskDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", deadline='" + deadline + '\'' +
+                ", taskCategory=" + taskCategory +
+                '}';
+    }
 }

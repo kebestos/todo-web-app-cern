@@ -73,4 +73,12 @@ public class CustomUser {
     public int hashCode() {
         return Objects.hash(id, username, password, roles, tasks);
     }
+
+    @Override
+    public String toString() {
+        return "CustomUser{" +
+                "id=" + id + '\n' +
+                ", username='" + username + '\'' + '\n' +
+                '}';
+    }
 }

@@ -50,4 +50,13 @@ public class TaskCategory {
     public int hashCode() {
         return Objects.hash(id, name, description);
     }
+
+    @Override
+    public String toString() {
+        return "TaskCategory{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

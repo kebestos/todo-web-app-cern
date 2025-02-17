@@ -41,19 +41,19 @@ public class TaskController {
      */
     @PostMapping
     public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDto, Principal principal) {
-        LOGGER.info("createTask is called in TaskController with parameter TaskDTO: {} and Principal {}", taskDto, principal);
+        LOGGER.info("createTask is called in TaskController with parameter TaskDTO: {} and Principal {}", taskDto.toString(), principal);
 
         String userName = principal.getName();
         LOGGER.info("Principal has userName: {}", userName);
 
         Task task = taskMapper.toTask(taskDto);
-        LOGGER.info("mapper toTask is called in createTask with output Task: {}", task);
+        LOGGER.info("mapper toTask is called in createTask with output Task: {}", task.toString());
 
         Task taskCreated = taskService.createTask(task, userName);
-        LOGGER.info("service createTask is called with output Task created: {}", taskCreated);
+        LOGGER.info("service createTask is called with output Task created: {}", taskCreated.toString());
 
         TaskDTO taskCreatedDto = taskMapper.toTaskDto(taskCreated);
-        LOGGER.info("mapper toTaskDto is called in createTask with output TaskDTO: {}", taskCreatedDto);
+        LOGGER.info("mapper toTaskDto is called in createTask with output TaskDTO: {}", taskCreatedDto.toString());
 
         return ResponseEntity.ok(taskCreatedDto);
     }

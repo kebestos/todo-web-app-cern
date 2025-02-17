@@ -76,4 +76,16 @@ public class TaskQueryDTO {
     public void setDeadlineCriteria(String deadlineCriteria) {
         this.deadlineCriteria = deadlineCriteria;
     }
+
+    @Override
+    public String toString() {
+        return "TaskQueryDTO{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", deadline='" + deadline + '\'' +
+                ", categoryId=" + categoryId +
+                ", userId=" + userId +
+                ", deadlineCriteria='" + deadlineCriteria + '\'' +
+                '}';
+    }
 }

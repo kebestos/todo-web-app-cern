@@ -1,7 +1,5 @@
 package ch.cern.todo.controller.exception;
 
-import java.time.LocalDateTime;
-
 public class ApiErrorResponse {
 
     private String timestamp;
