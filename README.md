@@ -5,7 +5,7 @@ Spring boot 3.4.1
 
 This application has basic CRUD REST API for task and task category, based on the following model :
 
-![DB model](DBModel.png)
+![DB model](DBModel_v2.png)
 
 An API to search Tasks by user, name, description, deadline, deadline criteria and category in any combination is available.
 
